@@ -77,6 +77,7 @@ class MenuViewController: UIViewController {
         self.menuView.profileView.imageView.isUserInteractionEnabled = true
         self.menuView.profileView.imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewTouchUpInside)))
         self.menuView.profileButton.addTarget(self, action: #selector(profileButtonTouchUpInside), for: .touchUpInside)
+        self.menuView.walletButton.addTarget(self, action: #selector(walletButtonTouchUpInside), for: .touchUpInside)
         self.menuView.settingsButton.addTarget(self, action: #selector(settingsButtonTouchUpInside), for: .touchUpInside)
         self.menuView.helpButton.addTarget(self, action: #selector(helpButtonTouchUpInside), for: .touchUpInside)
         self.menuView.reportBugButton.addTarget(self, action: #selector(reportBugButtonTouchUpInside), for: .touchUpInside)
@@ -99,6 +100,15 @@ class MenuViewController: UIViewController {
         AppController.shared.pushViewController(for: .about, with: identity)
         self.close()
     }
+    
+    
+    @objc private func walletButtonTouchUpInside() {
+        Analytics.shared.trackDidTapButton(buttonName: "wallet")
+        self.close() {
+            AppController.shared.showWalletViewController()
+        }
+    }
+    
 
     @objc private func settingsButtonTouchUpInside() {
         Analytics.shared.trackDidTapButton(buttonName: "settings")
@@ -182,6 +192,7 @@ fileprivate class MenuView: UIView {
     }()
 
     let profileButton = MenuButton(title: .yourProfile, image: UIImage.verse.profile)
+    let walletButton = MenuButton(title: .yourWallet, image: UIImage.verse.profile)
     let settingsButton = MenuButton(title: .settings, image: UIImage.verse.settings)
     let helpButton = MenuButton(title: .helpAndSupport, image: UIImage.verse.help)
     let reportBugButton = MenuButton(title: .reportBug, image: UIImage.verse.reportBug)
@@ -209,6 +220,13 @@ fileprivate class MenuView: UIView {
         
         separator = Layout.separatorView(color: UIColor.menuBorderColor)
         Layout.fillSouth(of: self.profileButton, with: separator)
+        
+        Layout.fillSouth(of: separator, with: self.walletButton)
+        self.walletButton.constrainHeight(to: 50)
+        self.walletButton.imageEdgeInsets = .top(-5)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        Layout.fillSouth(of: self.walletButton, with: separator)
 
         Layout.fillSouth(of: separator, with: self.settingsButton)
         self.settingsButton.constrainHeight(to: 50)

@@ -109,6 +109,16 @@ class AppController: UIViewController {
         self.mainViewController?.present(nc, animated: true)
     }
     
+ 
+    // MARK: wallet view controller
+
+    func showWalletViewController() {
+        let nc = UINavigationController(rootViewController: WalletViewController())
+        self.mainViewController?.present(nc, animated: true)
+    }
+    
+    
+    
     // MARK: Observers
     
     func addObservers() {

@@ -18,7 +18,9 @@ target 'Planetary' do
     pod 'Bugsnag', '5.23.1'
     pod 'Down', '0.9.2'
     pod 'SkeletonView', '1.8.7'
-    
+    pod 'TrustSDK', '1.4.6'
+    pod 'TrustSDK/Wallet', '2.3.7'
+    pod 'CryptoSwift', '1.3.5'
 end
 
 target 'APITests' do

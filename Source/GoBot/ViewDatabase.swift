@@ -2268,6 +2268,8 @@ class ViewDatabase {
             break
         case .unsupported:
             break
+        case .wallet:
+            break
         }
         return []
     }
@@ -2413,6 +2415,9 @@ class ViewDatabase {
                         try self.fillVote(msgID: msgKeyID, msg: msg, pms: pms)
 
                     case .unknown: // ignore encrypted
+                        continue
+
+                    case .wallet: // ignore encrypted
                         continue
 
                     case .unsupported:

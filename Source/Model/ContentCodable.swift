@@ -39,6 +39,7 @@ extension ContentCodable {
             case .address:      throw BotError.encodeFailure
             case .unknown:      throw BotError.encodeFailure
             case .unsupported:  throw BotError.encodeFailure
+            case .wallet:       throw BotError.encodeFailure
         }
 
         // likely this should have thrown already

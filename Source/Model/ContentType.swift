@@ -12,6 +12,7 @@ enum ContentType: String, CaseIterable, Codable {
 
     case address
     case about
+    case wallet
     case contact
     case dropContentRequest = "drop-content-request"
     case post

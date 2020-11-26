@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import TrustSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
     {
@@ -47,6 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Check https://apple.co/2ZXayG9 for more info.
         Darwin.signal(SIGPIPE, SIG_IGN)
         
+        TrustSDK.initialize(with: TrustSDK.Configuration(scheme: "trustexample"))
+        
         // done
         return true
     }
@@ -61,5 +66,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CrashReporting.shared.record("App will terminate")
         AppController.shared.exit()
         Analytics.shared.trackAppExit()
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return TrustSDK.application(app, open: url, options: options)
     }
 }

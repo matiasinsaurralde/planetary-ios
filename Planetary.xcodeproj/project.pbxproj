@@ -281,6 +281,8 @@
 		23EF5AAF249D185E00469977 /* BearerBlockedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EF5AAC249D185E00469977 /* BearerBlockedAPI.swift */; };
 		23EF5AB0249D185E00469977 /* BearerBlockedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EF5AAC249D185E00469977 /* BearerBlockedAPI.swift */; };
 		2D009BF924550868001351CB /* EveryoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D009BF824550868001351CB /* EveryoneViewController.swift */; };
+		2D78B1A4256FE2F40044524F /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D78B1A3256FE2F40044524F /* WalletViewController.swift */; };
+		2D78B1C2256FF3A90044524F /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D78B1C1256FF3A90044524F /* WalletView.swift */; };
 		53033E9A237F682F004609F8 /* ResumeOnboardingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E99237F682F004609F8 /* ResumeOnboardingStep.swift */; };
 		53033E9C23831CD1004609F8 /* Onboarding+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E9B23831CD1004609F8 /* Onboarding+Status.swift */; };
 		53033E9F2383322B004609F8 /* Onboarding+AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E9E2383322B004609F8 /* Onboarding+AppConfiguration.swift */; };
@@ -905,6 +907,8 @@
 		23EF5AA7249D177F00469977 /* BlockedAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedAPI.swift; sourceTree = "<group>"; };
 		23EF5AAC249D185E00469977 /* BearerBlockedAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearerBlockedAPI.swift; sourceTree = "<group>"; };
 		2D009BF824550868001351CB /* EveryoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryoneViewController.swift; sourceTree = "<group>"; };
+		2D78B1A3256FE2F40044524F /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
+		2D78B1C1256FF3A90044524F /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
 		316D716D251CC0B347E630DA /* Pods-Planetary.appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planetary.appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Planetary/Pods-Planetary.appstore.xcconfig"; sourceTree = "<group>"; };
 		3C118088E10BAE1C911EDE02 /* Pods_FBTTUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FBTTUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4468B60D82AA8885DDD68F4A /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -1624,6 +1628,7 @@
 				53C966E1236D037000E70689 /* UIViewController+Report.swift */,
 				536255DD23AC4C46001007D0 /* UIViewController+Sync.swift */,
 				0AF9E0A12465D7A700910575 /* ThreadReplyPaginatedDataSource.swift */,
+				2D78B1A3256FE2F40044524F /* WalletViewController.swift */,
 				0AC10DE5246DBDDD00CCA22A /* KnownPubsTableViewDataSource.swift */,
 			);
 			path = Controller;
@@ -1896,6 +1901,7 @@
 				53211CCF227C8F85007FB785 /* AboutCellView.swift */,
 				539FD4AE22C19B9F005A4DF2 /* AboutsMenu.swift */,
 				5357550222694BCC002A6989 /* AboutView.swift */,
+				2D78B1C1256FF3A90044524F /* WalletView.swift */,
 				53F24FB322C70B5200CFCBAA /* AvatarButton.swift */,
 				5319258122F3B13600B44FA3 /* AvatarImageView.swift */,
 				53EAB3902398692000DF5530 /* AvatarStackView.swift */,
@@ -3017,6 +3023,7 @@
 				539FD4AF22C19B9F005A4DF2 /* AboutsMenu.swift in Sources */,
 				53C9FA2F22FCF64700EAC35F /* SettingsViewController.swift in Sources */,
 				5396A633224836E800C57A4B /* UIColor+Hex.swift in Sources */,
+				2D78B1A4256FE2F40044524F /* WalletViewController.swift in Sources */,
 				5396A61F224429C700C57A4B /* LogService.swift in Sources */,
 				1B5DB7D024AE5C8E008DCB81 /* FollowerTableViewController.swift in Sources */,
 				1B5DB7CC24AC01DA008DCB81 /* StatisticsOperation.swift in Sources */,
@@ -3128,6 +3135,7 @@
 				1BA1FECE2432805C00FBD5E5 /* Identity+Link.swift in Sources */,
 				53211CD0227C8F85007FB785 /* AboutCellView.swift in Sources */,
 				53EE020022051B6200DFDF16 /* Identifier.swift in Sources */,
+				2D78B1C2256FF3A90044524F /* WalletView.swift in Sources */,
 				0AF9E0A6246B149900910575 /* AnalyticsService+Debug.swift in Sources */,
 				8D8105822346A9740029C72E /* Relationship.swift in Sources */,
 				0AD8D631240EC38600D87A95 /* ManagePubsViewController.swift in Sources */,

@@ -48,6 +48,7 @@ enum Text: String, Localizable, CaseIterable {
     case atDayTime = "{{ day }} at {{ time }}"
 
     case yourProfile = "Your Profile"
+    case yourWallet = "Your Wallet"
     case helpAndSupport = "Help and Support"
     case reportBug = "Report a Bug"
     case settings = "Settings"

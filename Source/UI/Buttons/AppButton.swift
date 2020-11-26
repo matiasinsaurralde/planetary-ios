@@ -24,6 +24,7 @@ class AppButton: UIButton {
 
     // allows the button class to implement a default action, if no additional context is needed to perform the action
     // otherwise, assign `action`.
+    
     func defaultAction() {
         assertionFailure("Default action was not implemented.")
     }
