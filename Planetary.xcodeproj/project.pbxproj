@@ -283,6 +283,8 @@
 		2D009BF924550868001351CB /* EveryoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D009BF824550868001351CB /* EveryoneViewController.swift */; };
 		2D78B1A4256FE2F40044524F /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D78B1A3256FE2F40044524F /* WalletViewController.swift */; };
 		2D78B1C2256FF3A90044524F /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D78B1C1256FF3A90044524F /* WalletView.swift */; };
+		2DA239DE25703F5900E0CAA4 /* UIViewController+Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA239DD25703F5900E0CAA4 /* UIViewController+Verse.swift */; };
+		2DA23A282571471B00E0CAA4 /* wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DA23A272571471B00E0CAA4 /* wallet.storyboard */; };
 		53033E9A237F682F004609F8 /* ResumeOnboardingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E99237F682F004609F8 /* ResumeOnboardingStep.swift */; };
 		53033E9C23831CD1004609F8 /* Onboarding+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E9B23831CD1004609F8 /* Onboarding+Status.swift */; };
 		53033E9F2383322B004609F8 /* Onboarding+AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53033E9E2383322B004609F8 /* Onboarding+AppConfiguration.swift */; };
@@ -909,6 +911,8 @@
 		2D009BF824550868001351CB /* EveryoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryoneViewController.swift; sourceTree = "<group>"; };
 		2D78B1A3256FE2F40044524F /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		2D78B1C1256FF3A90044524F /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
+		2DA239DD25703F5900E0CAA4 /* UIViewController+Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Verse.swift"; sourceTree = "<group>"; };
+		2DA23A272571471B00E0CAA4 /* wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = wallet.storyboard; sourceTree = "<group>"; };
 		316D716D251CC0B347E630DA /* Pods-Planetary.appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planetary.appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Planetary/Pods-Planetary.appstore.xcconfig"; sourceTree = "<group>"; };
 		3C118088E10BAE1C911EDE02 /* Pods_FBTTUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FBTTUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4468B60D82AA8885DDD68F4A /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -1621,15 +1625,16 @@
 				53E341FB224FF87D002BB5F4 /* NewPostViewController.swift */,
 				53B4F5F022B7123900027C6A /* NotificationsViewController.swift */,
 				8DDA836E237CBE5A00B2A52C /* PostReplyDelegate+DataSource.swift */,
+				53C966E1236D037000E70689 /* UIViewController+Report.swift */,
 				0AF9E09D246234BE00910575 /* PostReplyPaginatedDelegate+DataSource.swift */,
 				0AD8D634240EFF8800D87A95 /* RedeemInviteViewController.swift */,
 				53AD3FE62273AE21005228F9 /* ThreadViewController.swift */,
 				535B6A0523712D79008C248E /* UIViewController+Block.swift */,
-				53C966E1236D037000E70689 /* UIViewController+Report.swift */,
 				536255DD23AC4C46001007D0 /* UIViewController+Sync.swift */,
 				0AF9E0A12465D7A700910575 /* ThreadReplyPaginatedDataSource.swift */,
 				2D78B1A3256FE2F40044524F /* WalletViewController.swift */,
 				0AC10DE5246DBDDD00CCA22A /* KnownPubsTableViewDataSource.swift */,
+				2DA23A272571471B00E0CAA4 /* wallet.storyboard */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1738,8 +1743,8 @@
 		5344D82D21C4649700704A34 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				53D66625222A55340001D9BB /* Analytics */,
 				539246D822A82F7C00D01EEC /* API */,
+				53D66625222A55340001D9BB /* Analytics */,
 				5312143B21CD60A600F3FCEB /* App */,
 				531A8A2B21F18BE000D5C8C0 /* Bot */,
 				533EDBDE2385F3B1008B3565 /* Cache */,
@@ -1864,14 +1869,15 @@
 				5357550A226A3523002A6989 /* UITableView+KeyValue.swift */,
 				53AD3FD6226FC4B8005228F9 /* UITableView+Verse.swift */,
 				0A4870FC2498014F00BCD063 /* UICollectionView+Verse.swift */,
-				531B92B822CD128F005D5255 /* UITextView+Mention.swift */,
 				531B92B222CAC25C005D5255 /* UITextView+Verse.swift */,
 				5319F06A234EDC7F00F4D3C1 /* UIView+HeaderView.swift */,
+				531B92B822CD128F005D5255 /* UITextView+Mention.swift */,
 				53211CDD228250D7007FB785 /* UIView+Stroke.swift */,
 				53AD3FD0226F736A005228F9 /* UIViewTapGesture.swift */,
 				5319257D22F286FC00B44FA3 /* URL+Verse.swift */,
 				53631EF223A99CF0009C6999 /* NSAttributedString+Flatten.swift */,
 				2343F1CA245851E5008D7ECE /* DispatchQueue+Deduped.swift */,
+				2DA239DD25703F5900E0CAA4 /* UIViewController+Verse.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2400,6 +2406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D9143F5230C5F4E0075BC8A /* Generated.strings in Resources */,
+				2DA23A282571471B00E0CAA4 /* wallet.storyboard in Resources */,
 				5369D2A6220B970100A65622 /* Feed.json in Resources */,
 				53B634B8221634B600400403 /* Feed_big.json in Resources */,
 				5369D2A8220BA60300A65622 /* Abouts.json in Resources */,
@@ -3112,6 +3119,7 @@
 				0ACE91A6243D742700EFB4E9 /* GoBotError+LocalizedError.swift in Sources */,
 				0AF9E0A42465D7D000910575 /* ThreadReplyView.swift in Sources */,
 				0A64A83C247353CE009A5EBF /* VersePushAPI.swift in Sources */,
+				2DA239DE25703F5900E0CAA4 /* UIViewController+Verse.swift in Sources */,
 				53EE01F42204F66200DFDF16 /* Secret.swift in Sources */,
 				53B4F5FF22B9E4F200027C6A /* Abouts.swift in Sources */,
 				5357BD7D23CFD0B9005665AB /* UserDefaults+AnalyticsService.swift in Sources */,

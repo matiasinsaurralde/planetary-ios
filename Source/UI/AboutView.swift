@@ -1,10 +1,10 @@
-//
-//  AboutView.swift
-//  FBTT
-//
-//  Created by Christoph on 4/18/19.
-//  Copyright © 2019 Verse Communications Inc. All rights reserved.
-//
+        //
+        //  AboutView.swift
+        //  FBTT
+        //
+        //  Created by Christoph on 4/18/19.
+        //  Copyright © 2019 Verse Communications Inc. All rights reserved.
+        //
 
 import Foundation
 import UIKit

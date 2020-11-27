@@ -32,6 +32,9 @@ struct VerseImages {
     let smallShare = UIImage(named: "button-share")
     let optionsOff = UIImage(named: "icon-options-off")
     let optionsOn = UIImage(named: "icon-options-on")
+    let trust = UIImage(named: "icon-trust")
+    let shieldFilled = UIImage(named: "icon-shield-fill")
+    let shield = UIImage(named: "icon-shield")
 }
 
 extension UIImage {

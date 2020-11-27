@@ -1,259 +1,119 @@
 //
-//  WalletView.swift
-//  Planetary
+//  AboutView.swift
+//  FBTT
 //
 //  Created by Rabble on 11/26/20.
-//  Copyright © 2020 Verse Communications Inc. All rights reserved.
+//  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
+
+
 
 import Foundation
 import UIKit
 
+
 class WalletView: UIView {
 
+    //slet profileView = ProfileImageView()
 
-    private let walletLabel: UILabel = {
-        let label = UILabel.forAutoLayout()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.lineBreakMode = .byCharWrapping
-        label.numberOfLines = 2
-        label.textAlignment = .center
-        return label
-    }()
-
-    
-    lazy var payWithWalletButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = .avatarRing
-        button.isHidden = true
-        button.setImage(UIImage.verse.camera, for: .normal)
-        button.stroke(color: .avatarRing)
-        return button
-    }()
-
-    lazy var payWithWalletButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = .avatarRing
-        button.isHidden = true
-        button.setImage(UIImage.verse.camera, for: .normal)
-        button.stroke(color: .avatarRing)
-        return button
-    }()
-
-    
-    lazy var editButton: PillButton = {
-        let button = PillButton()
-        button.isHidden = true
-        button.setTitle(.editProfile)
-        button.setImage(UIImage.verse.editPencil)
-        button.isSelected = true
-        
-        return button
-    }()
-
-    lazy var shareButton: PillButton = {
-        let button = PillButton()
-        button.setTitle(.share)
-        button.setImage(UIImage.verse.smallShare)
-        return button
-    }()
-
-    lazy var editPhotoButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = .avatarRing
-        button.isHidden = true
-        button.setImage(UIImage.verse.camera, for: .normal)
-        button.stroke(color: .avatarRing)
-        return button
-    }()
-
-    var descriptionContainerZeroHeightConstraint: NSLayoutConstraint?
-
-    private lazy var descriptionTextView: UITextView = {
-        let view = UITextView.forAutoLayout()
-        view.addGestureRecognizer(self.tapGesture.recognizer)
-        view.isEditable = false
-        view.isScrollEnabled = false
-        view.textContainer.lineFragmentPadding = 0
-        view.backgroundColor = .cardBackground
+    let label: UILabel = {
+        let view = UILabel.forAutoLayout()
+        view.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        view.textAlignment = .center
+        view.textColor = UIColor.text.default
+        view.lineBreakMode = .byTruncatingTail
         return view
     }()
 
-    var followingView = FollowCountView(text: .followingCount, secondaryText: .inYourNetwork)
-    var followedByView = FollowCountView(text: .followedByCount, secondaryText: .inYourNetwork)
+    let signMesageButton = WalletButton(title: .yourProfile, image: UIImage.verse.profile)
+    let signTransactionButton = WalletButton(title: .yourWallet, image: UIImage.verse.profile)
+    let payWithTrustButton = WalletButton(title: .settings, image: UIImage.verse.settings)
+    let getAccountsButton = WalletButton(title: .helpAndSupport, image: UIImage.verse.help)
+    let signSimpleTxButton = WalletButton(title: .reportBug, image: UIImage.verse.reportBug)
 
-    // MARK: Lifecycle
+    let peersView = PeersView()
+    
 
-    init() {
-        super.init(frame: CGRect.zero)
-        self.useAutoLayout()
-        self.backgroundColor = .cardBackground
-        self.addSubviews()
+    override init(frame: CGRect) {
+
+        super.init(frame: frame)
+        self.backgroundColor = UIColor.menuBackgroundColor
+
+        //self.addSubview(self.profileView)
+        
+        //Layout.fillSouth(of: self.profileView, with: self.label, insets: UIEdgeInsets(top: 20, left: Layout.horizontalSpacing, bottom: 0, right: -Layout.horizontalSpacing))
+
+        var separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        
+        //Layout.fillSouth(of: self.label, with: separator, insets: .top(60))
+
+        Layout.fillSouth(of: separator, with: self.signMesageButton)
+        self.signMesageButton.constrainHeight(to: 50)
+        self.signMesageButton.imageEdgeInsets = .top(-5)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        //Layout.fillSouth(of: self.profileButton, with: separator)
+        
+        //Layout.fillSouth(of: separator, with: self.walletButton)
+        self.signTransactionButton.constrainHeight(to: 50)
+        self.signTransactionButton.imageEdgeInsets = .top(-5)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        //Layout.fillSouth(of: self.walletButton, with: separator)
+
+        //Layout.fillSouth(of: separator, with: self.settingsButton)
+        self.payWithTrustButton.constrainHeight(to: 50)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        //Layout.fillSouth(of: self.settingsButton, with: separator)
+
+        //Layout.fillSouth(of: separator, with: self.helpButton)
+        self.getAccountsButton.constrainHeight(to: 50)
+        self.getAccountsButton.imageEdgeInsets = .top(2)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        //Layout.fillSouth(of: self.helpButton, with: separator)
+
+        //Layout.fillSouth(of: separator, with: self.reportBugButton)
+        self.signSimpleTxButton.constrainHeight(to: 50)
+        
+        separator = Layout.separatorView(color: UIColor.menuBorderColor)
+        //Layout.fillSouth(of: self.reportBugButton, with: separator)
+
+        let insets = UIEdgeInsets(top: 0, left: self.signSimpleTxButton.contentEdgeInsets.left + 8, bottom: -36, right: -Layout.horizontalSpacing)
+        Layout.fillBottom(of: self, with: self.peersView, insets: insets)
+        self.peersView.isHidden = !UserDefaults.standard.showPeerToPeerWidget
+        self.peersView.layoutSubviews()
+
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: Layout
 
-    private func addSubviews() {
 
-        Layout.addSeparator(toTopOf: self)
+class WalletButton: UIButton {
 
-        Layout.center(self.circleView, atTopOf: self, inset: 23, size: CGSize(square: Layout.profileImageOutside))
-        Layout.center(self.imageView, in: self.circleView, size: CGSize(square: Layout.profileImageInside))
+    init(title: Text, image: UIImage? = nil) {
 
-        self.addSubview(self.editPhotoButton)
-        self.editPhotoButton.constrainSize(to: CGSize(square: 45))
-        self.editPhotoButton.constrainTop(toTopOf: self.circleView, constant: 120)
-        self.editPhotoButton.constrainLeading(to: self.circleView, constant: 140)
+        super.init(frame: .zero)
+        self.contentHorizontalAlignment = .left
+        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: 26, bottom: 0, right: 0)
+        self.titleEdgeInsets = UIEdgeInsets(top: 0, left: 19, bottom: 0, right: 0)
 
-        var insets = UIEdgeInsets.topLeftRight
-        insets.top = insets.top - 2
-        Layout.fillSouth(of: self.circleView, with: self.nameLabel, insets: insets)
+        self.setTitle(title.text, for: .normal)
+        self.setTitleColor(UIColor.menuUnselectedItemText, for: .normal)
+        self.setTitleColor(UIColor.menuSelectedItemText, for: .highlighted)
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
 
-        Layout.fillSouth(of: self.nameLabel, with: self.followingLabel, insets: .leftBottomRight)
+        self.setImage(image, for: .normal)
 
-        let buttonStack = UIStackView.forAutoLayout()
-        buttonStack.spacing = Layout.horizontalSpacing
-        buttonStack.distribution = .equalCentering
-
-        buttonStack.addArrangedSubview(UIView())
-        buttonStack.addArrangedSubview(self.editButton)
-        buttonStack.addArrangedSubview(self.followButton)
-        buttonStack.addArrangedSubview(self.shareButton)
-        buttonStack.addArrangedSubview(UIView())
-
-        Layout.fillSouth(of: self.followingLabel, with: buttonStack, insets: .top(Layout.verticalSpacing - 3))
-
-        var separator = Layout.sectionSeparatorView(color: .appBackground)
-        Layout.fillSouth(of: buttonStack, with: separator, insets: .top(Layout.verticalSpacing - 3))
-
-        let descriptionContainer = UIView.forAutoLayout()
-        descriptionContainer.clipsToBounds = true
-        let verticalInset = Layout.verticalSpacing - 10
-        insets = UIEdgeInsets(top: verticalInset, left: Layout.postSideMargins, bottom: -verticalInset, right: -Layout.postSideMargins)
-        Layout.fill(view: descriptionContainer, with: self.descriptionTextView, insets: insets)
-        Layout.addSeparator(toBottomOf: descriptionContainer)
-
-        Layout.fillSouth(of: separator, with: descriptionContainer)
-
-        self.descriptionContainerZeroHeightConstraint = descriptionContainer.constrainHeight(to: 0)
-
-        Layout.fillSouth(of: descriptionContainer, with: self.followedByView)
-        self.followedByView.constrainHeight(to: 50)
-
-        separator = Layout.addSeparator(southOf: self.followedByView)
-
-        Layout.fillSouth(of: separator, with: self.followingView)
-        self.followingView.constrainHeight(to: 50)
-
-        separator = Layout.sectionSeparatorView(bottom: false,
-                                                color: .appBackground)
-        Layout.fillSouth(of: self.followingView, with: separator)
-        separator.pinBottomToSuperviewBottom()
+        self.setBackgroundImage(UIColor.menuSelectedItemBackground.image(), for: .highlighted)
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.circleView.round()
-        self.editPhotoButton.round()
-    }
-
-    // MARK: KeyValueUpdateable
-
-    override func update(with keyValue: KeyValue) {
-        guard let about = keyValue.value.content.about else { return }
-        self.update(with: about)
-    }
-
-    // MARK: Other updates
-
-    // called by other update functions
-    private func update(name: String, bio: NSAttributedString, identity: Identity) {
-        self.backgroundColor = .cardBackground
-
-        self.nameLabel.text = name
-        self.nameLabel.lineBreakMode = .byWordWrapping
-
-        self.descriptionTextView.attributedText = bio
-
-        self.descriptionContainerZeroHeightConstraint?.isActive = bio.string.trimmed.isEmpty
-
-        self.followButton.isHidden = identity.isCurrentUser
-        self.editButton.isHidden = !identity.isCurrentUser
-        self.editPhotoButton.isHidden = self.editButton.isHidden
-
-        if identity.isCurrentUser {
-            self.followingLabel.text = Text.thisIsYou.text
-        } else {
-            createRelationship(identity: identity)
-        }
-
-        // updating may change the content of the description text view
-        // and hence change it's height, so a layout is likely needed
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-
-    func update(with about: About) {
-
-        self.update(name: about.nameOrIdentity,
-                    bio: about.attributedDescription,
-                    identity: about.identity)
-
-        self.imageView.set(image: about.image)
-    }
-
-    func update(with person: Person) {
-        self.update(name: person.name,
-                    bio: person.attributedBio,
-                    identity: person.identity)
-
-        self.imageView.load(for: person, animate: true)
-    }
-
-    var relationship: Relationship?
-
-    // do this once, so we only have one notification
-    private func createRelationship(identity: Identity) {
-        guard relationship == nil, let me = Bots.current.identity else { return }
-
-        let relationship = Relationship(from: me, to: identity)
-
-        relationship.load {
-            self.update(with: relationship)
-            self.followButton.relationship = relationship
-        }
-
-        NotificationCenter.default.addObserver(self, selector: #selector(relationshipDidChange(notification:)), name: relationship.notificationName, object: nil)
-    }
-
-    func update(with relationship: Relationship) {
-        self.relationship = relationship
-
-        self.followButton.isSelected = relationship.isFollowing
-
-        if relationship.isFollowedBy {
-            self.followingLabel.text = Text.isFollowingYou.text
-        }
-    }
-
-    @objc func relationshipDidChange(notification: Notification) {
-        guard let relationship = notification.userInfo?[Relationship.infoKey] as? Relationship else {
-            return
-        }
-        self.update(with: relationship)
-    }
-
-    func update(followedBy: [About], following: [About]) {
-        self.followedByView.abouts = followedBy
-        self.followingView.abouts = following
-
-        // updating may change the content of the following label
-        // and hence change it's height, so a layout is likely needed
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

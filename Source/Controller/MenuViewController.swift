@@ -192,7 +192,7 @@ fileprivate class MenuView: UIView {
     }()
 
     let profileButton = MenuButton(title: .yourProfile, image: UIImage.verse.profile)
-    let walletButton = MenuButton(title: .yourWallet, image: UIImage.verse.profile)
+    let walletButton = MenuButton(title: .yourWallet, image: UIImage.verse.shield)
     let settingsButton = MenuButton(title: .settings, image: UIImage.verse.settings)
     let helpButton = MenuButton(title: .helpAndSupport, image: UIImage.verse.help)
     let reportBugButton = MenuButton(title: .reportBug, image: UIImage.verse.reportBug)
