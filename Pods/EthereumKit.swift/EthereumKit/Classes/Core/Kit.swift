@@ -11,6 +11,7 @@ public class Kit {
     private let maxGasLimit = 1_000_000
     private let defaultMinAmount: BigUInt = 1
 
+    private let lastBlockBloomFilterSubject = PublishSubject<BloomFilter>()
     private let lastBlockHeightSubject = PublishSubject<Int>()
     private let syncStateSubject = PublishSubject<SyncState>()
     private let transactionsSyncStateSubject = PublishSubject<SyncState>()
@@ -20,6 +21,7 @@ public class Kit {
     private let blockchain: IBlockchain
     private let transactionManager: ITransactionManager
     private let transactionBuilder: TransactionBuilder
+    private let transactionSigner: TransactionSigner
     private let state: EthereumKitState
 
     public let address: Address
@@ -30,10 +32,11 @@ public class Kit {
 
     public let logger: Logger
 
-    init(blockchain: IBlockchain, transactionManager: ITransactionManager, transactionBuilder: TransactionBuilder, state: EthereumKitState = EthereumKitState(), address: Address, networkType: NetworkType, uniqueId: String, etherscanApiProvider: EtherscanApiProvider, logger: Logger) {
+    init(blockchain: IBlockchain, transactionManager: ITransactionManager, transactionBuilder: TransactionBuilder, transactionSigner: TransactionSigner, state: EthereumKitState = EthereumKitState(), address: Address, networkType: NetworkType, uniqueId: String, etherscanApiProvider: EtherscanApiProvider, logger: Logger) {
         self.blockchain = blockchain
         self.transactionManager = transactionManager
         self.transactionBuilder = transactionBuilder
+        self.transactionSigner = transactionSigner
         self.state = state
         self.address = address
         self.networkType = networkType
@@ -75,6 +78,10 @@ extension Kit {
         lastBlockHeightSubject.asObservable()
     }
 
+    public var lastBlockBloomFilterObservable: Observable<BloomFilter> {
+        lastBlockBloomFilterSubject.asObservable()
+    }
+
     public var syncStateObservable: Observable<SyncState> {
         syncStateSubject.asObservable()
     }
@@ -93,7 +100,6 @@ extension Kit {
 
     public func start() {
         blockchain.start()
-        transactionManager.refresh()
     }
 
     public func stop() {
@@ -101,8 +107,8 @@ extension Kit {
     }
 
     public func refresh() {
-        blockchain.refresh()
-        transactionManager.refresh()
+//        blockchain.refresh()
+//        transactionManager.refresh()
     }
 
     public func transactionsSingle(fromHash: Data? = nil, limit: Int? = nil) -> Single<[TransactionWithInternal]> {
@@ -113,16 +119,34 @@ extension Kit {
         transactionManager.transaction(hash: hash)
     }
 
-    public func sendSingle(address: Address, value: BigUInt, transactionInput: Data = Data(), gasPrice: Int, gasLimit: Int) -> Single<TransactionWithInternal> {
-        let rawTransaction = transactionBuilder.rawTransaction(gasPrice: gasPrice, gasLimit: gasLimit, to: address, value: value, data: transactionInput)
+    public func sendSingle(address: Address, value: BigUInt, transactionInput: Data = Data(), gasPrice: Int, gasLimit: Int, nonce: Int? = nil) -> Single<TransactionWithInternal> {
+        var syncNonceSingle = blockchain.nonceSingle()
 
-        return blockchain.sendSingle(rawTransaction: rawTransaction)
-                .do(onSuccess: { [weak self] transaction in
-                    self?.transactionManager.handle(sentTransaction: transaction)
-                })
-                .map {
-                    TransactionWithInternal(transaction: $0)
-                }
+        if let nonce = nonce {
+            syncNonceSingle = Single<Int>.just(nonce)
+        }
+
+        return syncNonceSingle.flatMap { [weak self] nonce in
+            guard let kit = self else {
+                return Single<TransactionWithInternal>.error(SendError.nonceNotAvailable)
+            }
+
+            let rawTransaction = kit.transactionBuilder.rawTransaction(gasPrice: gasPrice, gasLimit: gasLimit, to: address, value: value, data: transactionInput, nonce: nonce)
+
+            return kit.blockchain.sendSingle(rawTransaction: rawTransaction)
+                    .do(onSuccess: { [weak self] transaction in
+                        self?.transactionManager.handle(sentTransaction: transaction)
+                    })
+                    .map {
+                        TransactionWithInternal(transaction: $0)
+                    }
+        }
+    }
+
+    public func signedTransaction(address: Address, value: BigUInt, transactionInput: Data = Data(), gasPrice: Int, gasLimit: Int, nonce: Int) throws -> Data {
+        let rawTransaction = transactionBuilder.rawTransaction(gasPrice: gasPrice, gasLimit: gasLimit, to: address, value: value, data: transactionInput, nonce: nonce)
+        let signature = try transactionSigner.signature(rawTransaction: rawTransaction)
+        return transactionBuilder.encode(rawTransaction: rawTransaction, signature: signature)
     }
 
     public var debugInfo: String {
@@ -138,16 +162,22 @@ extension Kit {
     }
 
     public func transactionStatus(transactionHash: Data) -> Single<TransactionStatus> {
-        blockchain.transactionReceiptStatusSingle(transactionHash: transactionHash).flatMap { [unowned self] transactionStatus -> Single<TransactionStatus> in
-            switch transactionStatus {
-            case .success, .failed:
-                return Single.just(transactionStatus)
-            default:
-                return self.blockchain.transactionExistSingle(transactionHash: transactionHash).flatMap { exist -> Single<TransactionStatus> in
-                    Single.just(exist ? .pending : .notFound)
+        blockchain.transactionReceiptSingle(transactionHash: transactionHash)
+                .flatMap { [unowned self] receipt -> Single<TransactionStatus> in
+                    if let receipt = receipt {
+                        if let status = receipt.status {
+                            return Single.just(status == 0 ? .failed : .success)
+                        } else {
+                            // todo: handle nil status for pre Byzantium
+                            return Single.just(.success)
+                        }
+                    }
+
+                    return self.blockchain.transactionSingle(transactionHash: transactionHash)
+                            .map { transaction -> TransactionStatus in
+                                transaction != nil ? .pending : .notFound
+                            }
                 }
-            }
-        }
     }
 
     public func getStorageAt(contractAddress: Address, positionData: Data, defaultBlockParameter: DefaultBlockParameter = .latest) -> Single<Data> {
@@ -170,7 +200,7 @@ extension Kit {
         return blockchain.estimateGas(to: to, amount: resolvedAmount, gasLimit: maxGasLimit, gasPrice: gasPrice, data: nil)
     }
 
-    public func estimateGas(to: Address, amount: BigUInt?, gasPrice: Int?, data: Data?) -> Single<Int> {
+    public func estimateGas(to: Address?, amount: BigUInt?, gasPrice: Int?, data: Data?) -> Single<Int> {
         blockchain.estimateGas(to: to, amount: amount, gasLimit: maxGasLimit, gasPrice: gasPrice, data: data)
     }
 
@@ -188,6 +218,10 @@ extension Kit {
 
 extension Kit: IBlockchainDelegate {
 
+    func onUpdate(lastBlockBloomFilter: BloomFilter) {
+        lastBlockBloomFilterSubject.onNext(lastBlockBloomFilter)
+    }
+
     func onUpdate(lastBlockHeight: Int) {
         guard state.lastBlockHeight != lastBlockHeight else {
             return
@@ -203,6 +237,7 @@ extension Kit: IBlockchainDelegate {
             return
         }
 
+        transactionManager.refresh(delay: state.balance != nil)
         state.balance = balance
 
         balanceSubject.onNext(balance)
@@ -210,6 +245,15 @@ extension Kit: IBlockchainDelegate {
 
     func onUpdate(syncState: SyncState) {
         syncStateSubject.onNext(syncState)
+    }
+
+    func onUpdate(nonce: Int) {
+        guard state.nonce != nonce else {
+            return
+        }
+
+        transactionManager.refresh(delay: state.nonce != nil)
+        state.nonce = nonce
     }
 
 }
@@ -228,7 +272,7 @@ extension Kit: ITransactionManagerDelegate {
 
 extension Kit {
 
-    public static func instance(privateKey: Data, syncMode: SyncMode, networkType: NetworkType = .mainNet, rpcApi: RpcApi, etherscanApiKey: String, walletId: String, minLogLevel: Logger.Level = .error) throws -> Kit {
+    public static func instance(privateKey: Data, syncMode: SyncMode, networkType: NetworkType = .mainNet, syncSource: SyncSource, etherscanApiKey: String, walletId: String, minLogLevel: Logger.Level = .error) throws -> Kit {
         let logger = Logger(minLogLevel: minLogLevel)
 
         let uniqueId = "\(walletId)-\(networkType)"
@@ -244,12 +288,24 @@ extension Kit {
         let etherscanApiProvider = EtherscanApiProvider(networkManager: networkManager, network: network, etherscanApiKey: etherscanApiKey, address: address)
         let transactionsProvider: ITransactionsProvider = EtherscanTransactionProvider(provider: etherscanApiProvider)
 
-        let rpcApiProvider: IRpcApiProvider
-        switch rpcApi {
+        let infuraDomain: String
+        switch networkType {
+        case .ropsten: infuraDomain = "ropsten.infura.io"
+        case .kovan: infuraDomain = "kovan.infura.io"
+        case .mainNet: infuraDomain = "mainnet.infura.io"
+        }
+
+        let syncer: IRpcSyncer
+        let reachabilityManager = ReachabilityManager()
+
+        switch syncSource {
+        case let .infuraWebSocket(id, secret):
+            let socket = InfuraWebSocket(domain: infuraDomain, projectId: id, projectSecret: secret, reachabilityManager: reachabilityManager, logger: logger)
+            syncer = WebSocketRpcSyncer.instance(address: address, socket: socket, logger: logger)
         case let .infura(id, secret):
-            rpcApiProvider = InfuraApiProvider(networkManager: networkManager, network: network, id: id, secret: secret, address: address)
-        case .incubed:
-            rpcApiProvider = IncubedRpcApiProvider(address: address, logger: logger)
+            syncer = ApiRpcSyncer(address: address, rpcApiProvider: InfuraApiProvider(networkManager: networkManager, domain: infuraDomain, id: id, secret: secret), reachabilityManager: reachabilityManager)
+//        case .incubed:
+//            syncer = ApiRpcSyncer(address: address, rpcApiProvider: IncubedRpcApiProvider(logger: logger), reachabilityManager: ReachabilityManager())
         }
 
         var blockchain: IBlockchain
@@ -257,7 +313,8 @@ extension Kit {
         switch syncMode {
         case .api:
             let storage: IApiStorage = try ApiStorage(databaseDirectoryUrl: dataDirectoryUrl(), databaseFileName: "api-\(uniqueId)")
-            blockchain = ApiBlockchain.instance(storage: storage, transactionSigner: transactionSigner, transactionBuilder: transactionBuilder, rpcApiProvider: rpcApiProvider, logger: logger)
+            blockchain = RpcBlockchain.instance(address: address, storage: storage, syncer: syncer, transactionSigner: transactionSigner, transactionBuilder: transactionBuilder, logger: logger)
+
         case .spv(let nodePrivateKey):
             let storage: ISpvStorage = try SpvStorage(databaseDirectoryUrl: dataDirectoryUrl(), databaseFileName: "spv-\(uniqueId)")
 
@@ -285,7 +342,7 @@ extension Kit {
             let nodeManager = NodeManager(storage: discoveryStorage, nodeDiscovery: nodeDiscovery, nodeFactory: nodeFactory, logger: logger)
             nodeDiscovery.nodeManager = nodeManager
 
-            blockchain = SpvBlockchain.instance(storage: storage, nodeManager: nodeManager, transactionSigner: transactionSigner, transactionBuilder: transactionBuilder, rpcApiProvider: rpcApiProvider, network: network, address: address, nodeKey: nodeKey, logger: logger)
+            blockchain = SpvBlockchain.instance(storage: storage, nodeManager: nodeManager, transactionSigner: transactionSigner, transactionBuilder: transactionBuilder, network: network, address: address, nodeKey: nodeKey, logger: logger)
         case .geth:
             fatalError("Geth is not supported")
 //            let directoryUrl = try dataDirectoryUrl()
@@ -297,7 +354,7 @@ extension Kit {
         let transactionStorage: ITransactionStorage & IInternalTransactionStorage = TransactionStorage(databaseDirectoryUrl: try dataDirectoryUrl(), databaseFileName: "transactions-\(uniqueId)")
         let transactionManager = TransactionManager(storage: transactionStorage, transactionsProvider: transactionsProvider)
 
-        let ethereumKit = Kit(blockchain: blockchain, transactionManager: transactionManager, transactionBuilder: transactionBuilder, address: address, networkType: networkType, uniqueId: uniqueId, etherscanApiProvider: etherscanApiProvider, logger: logger)
+        let ethereumKit = Kit(blockchain: blockchain, transactionManager: transactionManager, transactionBuilder: transactionBuilder, transactionSigner: transactionSigner, address: address, networkType: networkType, uniqueId: uniqueId, etherscanApiProvider: etherscanApiProvider, logger: logger)
 
         blockchain.delegate = ethereumKit
         transactionManager.delegate = ethereumKit
@@ -305,7 +362,7 @@ extension Kit {
         return ethereumKit
     }
 
-    public static func instance(words: [String], syncMode wordsSyncMode: WordsSyncMode, networkType: NetworkType = .mainNet, rpcApi: RpcApi, etherscanApiKey: String, walletId: String, minLogLevel: Logger.Level = .error) throws -> Kit {
+    public static func instance(words: [String], syncMode wordsSyncMode: WordsSyncMode, networkType: NetworkType = .mainNet, rpcApi: SyncSource, etherscanApiKey: String, walletId: String, minLogLevel: Logger.Level = .error) throws -> Kit {
         let coinType: UInt32 = networkType == .mainNet ? 60 : 1
 
         let hdWallet = HDWallet(seed: Mnemonic.seed(mnemonic: words), coinType: coinType, xPrivKey: 0, xPubKey: 0)
@@ -319,7 +376,7 @@ extension Kit {
         case .geth: syncMode = .geth
         }
 
-        return try instance(privateKey: privateKey, syncMode: syncMode, networkType: networkType, rpcApi: rpcApi, etherscanApiKey: etherscanApiKey, walletId: walletId, minLogLevel: minLogLevel)
+        return try instance(privateKey: privateKey, syncMode: syncMode, networkType: networkType, syncSource: rpcApi, etherscanApiKey: etherscanApiKey, walletId: walletId, minLogLevel: minLogLevel)
     }
 
     public static func clear(exceptFor excludedFiles: [String]) throws {
@@ -352,6 +409,22 @@ extension Kit {
     public enum SyncError: Error {
         case notStarted
         case noNetworkConnection
+    }
+
+    public enum SendError: Error {
+        case nonceNotAvailable
+        case noAccountState
+    }
+
+    public enum EstimatedLimitError: Error {
+        case insufficientBalance
+
+        var causes: [String] {
+            [
+                "execution reverted",
+                "gas required exceeds"
+            ]
+        }
     }
 
 }

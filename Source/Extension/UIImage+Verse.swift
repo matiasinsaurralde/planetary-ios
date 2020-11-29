@@ -26,6 +26,8 @@ struct VerseImages {
     let newPostOpenLibrary = UIImage(named: "icon-library")
     let onboardingButton = UIImage(named: "onboarding-button")
     let profile = UIImage(named: "icon-profile")
+    let wallet = UIImage(named: "icon-wallet")
+    let shield = UIImage(named: "icon-shield")
     let reportBug = UIImage(named: "icon-report-bug")
     let settings = UIImage(named: "icon-settings")
     let share = UIImage(named: "icon-share")

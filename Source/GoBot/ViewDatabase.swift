@@ -563,7 +563,7 @@ class ViewDatabase {
             return KnownPub(
                 AddressID: try row.get(colAddressID),
                 ForFeed: try row.get(colAuthor),
-                Address: try row.get(colAddress),
+                SSBAddress: try row.get(colAddress),
                 InUse: try row.get(colUse),
                 WorkedLast: workedWhen,
                 LastError: try row.get(colLastErr),

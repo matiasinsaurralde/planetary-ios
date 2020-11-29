@@ -30,7 +30,7 @@ struct Content: Codable {
     // supported content
     var contentException: String?
     var about: About?
-    var address: Address?
+    var address: SSBAddress?
     var pub: Pub?
     var contact: Contact?
     var dropContentRequest: DropContentRequest?
@@ -110,7 +110,7 @@ struct Content: Codable {
         do {
             switch self.type {
                 case .about: self.about = try About(from: decoder)
-                case .address: self.address = try Address(from: decoder)
+                case .address: self.address = try SSBAddress(from: decoder)
                 case .contact: self.contact = try Contact(from: decoder)
                 case .dropContentRequest: self.dropContentRequest = try DropContentRequest(from: decoder)
                 case .pub: self.pub = try Pub(from: decoder)

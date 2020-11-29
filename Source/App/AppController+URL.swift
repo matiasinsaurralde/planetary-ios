@@ -75,6 +75,12 @@ extension AppController {
         self.push(controller)
     }
     
+    func walletViewController() {
+        let controller = WalletController()
+        self.push(controller)
+    }
+    
+    
     func pushThreadViewController(for identifier: MessageIdentifier) {
         Bots.current.thread(rootKey: identifier) { (root, _, error) in
             if let root = root {

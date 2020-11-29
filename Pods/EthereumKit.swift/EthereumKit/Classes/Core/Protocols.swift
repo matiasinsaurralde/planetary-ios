@@ -13,20 +13,23 @@ protocol IBlockchain {
     var lastBlockHeight: Int? { get }
     var balance: BigUInt? { get }
 
+    func nonceSingle() -> Single<Int>
     func sendSingle(rawTransaction: RawTransaction) -> Single<Transaction>
 
     func getLogsSingle(address: Address?, topics: [Any?], fromBlock: Int, toBlock: Int, pullTimestamps: Bool) -> Single<[EthereumLog]>
-    func transactionReceiptStatusSingle(transactionHash: Data) -> Single<TransactionStatus>
-    func transactionExistSingle(transactionHash: Data) -> Single<Bool>
+    func transactionReceiptSingle(transactionHash: Data) -> Single<TransactionReceipt?>
+    func transactionSingle(transactionHash: Data) -> Single<RpcTransaction?>
     func getStorageAt(contractAddress: Address, positionData: Data, defaultBlockParameter: DefaultBlockParameter) -> Single<Data>
     func call(contractAddress: Address, data: Data, defaultBlockParameter: DefaultBlockParameter) -> Single<Data>
-    func estimateGas(to: Address, amount: BigUInt?, gasLimit: Int?, gasPrice: Int?, data: Data?) -> Single<Int>
+    func estimateGas(to: Address?, amount: BigUInt?, gasLimit: Int?, gasPrice: Int?, data: Data?) -> Single<Int>
 }
 
 protocol IBlockchainDelegate: class {
+    func onUpdate(lastBlockBloomFilter: BloomFilter)
     func onUpdate(lastBlockHeight: Int)
     func onUpdate(balance: BigUInt)
     func onUpdate(syncState: SyncState)
+    func onUpdate(nonce: Int)
 }
 
 protocol ITransactionManager {
@@ -34,7 +37,7 @@ protocol ITransactionManager {
     var source: String { get }
     var delegate: ITransactionManagerDelegate? { get set }
 
-    func refresh()
+    func refresh(delay: Bool)
     func transactionsSingle(fromHash: Data?, limit: Int?) -> Single<[TransactionWithInternal]>
     func transaction(hash: Data) -> TransactionWithInternal?
     func handle(sentTransaction: Transaction)

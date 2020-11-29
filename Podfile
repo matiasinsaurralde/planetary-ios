@@ -18,7 +18,11 @@ target 'Planetary' do
     pod 'Bugsnag', '5.23.1'
     pod 'Down', '0.9.2'
     pod 'SkeletonView', '1.8.7'
-    pod 'EthereumKit.swift'
+    pod 'EthereumKit.swift', :git => 'https://github.com/horizontalsystems/ethereum-kit-ios.git'
+    pod 'SnapKit', '~> 5.0.0'
+    pod 'UniswapKit.swift', :git => 'https://github.com/horizontalsystems/ethereum-kit-ios.git'
+    pod 'Erc20Kit.swift', :git => 'https://github.com/horizontalsystems/ethereum-kit-ios.git'
+    pod 'BigInt'
     
 end
 

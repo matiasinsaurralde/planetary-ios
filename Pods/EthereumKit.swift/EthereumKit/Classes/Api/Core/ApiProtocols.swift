@@ -3,18 +3,7 @@ import BigInt
 
 protocol IRpcApiProvider {
     var source: String { get }
-
-    func lastBlockHeightSingle() -> Single<Int>
-    func transactionCountSingle() -> Single<Int>
-    func balanceSingle() -> Single<BigUInt>
-    func sendSingle(signedTransaction: Data) -> Single<Void>
-    func getLogs(address: Address?, fromBlock: Int, toBlock: Int, topics: [Any?]) -> Single<[EthereumLog]>
-    func transactionReceiptStatusSingle(transactionHash: Data) -> Single<TransactionStatus>
-    func transactionExistSingle(transactionHash: Data) -> Single<Bool>
-    func getStorageAt(contractAddress: Address, position: String, defaultBlockParameter: DefaultBlockParameter) -> Single<Data>
-    func call(contractAddress: Address, data: String, defaultBlockParameter: DefaultBlockParameter) -> Single<Data>
-    func getEstimateGas(to: Address, amount: BigUInt?, gasLimit: Int?, gasPrice: Int?, data: Data?) -> Single<Int>
-    func getBlock(byNumber: Int) -> Single<Block>
+    func single<T>(rpc: JsonRpc<T>) -> Single<T>
 }
 
 protocol IApiStorage {
@@ -23,4 +12,72 @@ protocol IApiStorage {
 
     var balance: BigUInt? { get }
     func save(balance: BigUInt)
+}
+
+protocol IRpcSyncer: AnyObject {
+    var delegate: IRpcSyncerDelegate? { get set }
+
+    var source: String { get }
+    var syncState: SyncState { get }
+
+    func start()
+    func stop()
+    func refresh()
+
+    func single<T>(rpc: JsonRpc<T>) -> Single<T>
+}
+
+protocol IRpcSyncerDelegate: AnyObject {
+    func didUpdate(syncState: SyncState)
+    func didUpdate(lastBlockLogsBloom: String)
+    func didUpdate(lastBlockHeight: Int)
+    func didUpdate(balance: BigUInt)
+    func didUpdate(nonce: Int)
+}
+
+protocol IWebSocket: AnyObject {
+    var delegate: IWebSocketDelegate? { get set }
+    var source: String { get }
+
+    func start()
+    func stop()
+
+    func send(data: Data) throws
+}
+
+protocol IWebSocketDelegate: AnyObject {
+    func didUpdate(state: WebSocketState)
+    func didReceive(data: Data)
+}
+
+protocol IRpcWebSocket: AnyObject {
+    var delegate: IRpcWebSocketDelegate? { get set }
+    var source: String { get }
+
+    func start()
+    func stop()
+
+    func send<T>(rpc: JsonRpc<T>, rpcId: Int) throws
+}
+
+protocol IRpcWebSocketDelegate: AnyObject {
+    func didUpdate(state: WebSocketState)
+    func didReceive(rpcResponse: JsonRpcResponse)
+    func didReceive(subscriptionResponse: RpcSubscriptionResponse)
+}
+
+enum WebSocketState {
+    case connecting
+    case connected
+    case disconnected(error: Error)
+
+    enum DisconnectError: Error {
+        case notStarted
+        case socketDisconnected(reason: String)
+    }
+
+    enum StateError: Error {
+        case notConnected
+    }
+
 }

@@ -19,6 +19,7 @@
 "Text.daysAgo" = "{{ days }} days ago";
 "Text.atDayTime" = "{{ day }} at {{ time }}";
 "Text.yourProfile" = "Your Profile";
+"Text.yourWallet" = "Wallet";
 "Text.helpAndSupport" = "Help and Support";
 "Text.reportBug" = "Report a Bug";
 "Text.settings" = "Settings";
