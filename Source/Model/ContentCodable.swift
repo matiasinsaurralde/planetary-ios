@@ -37,6 +37,7 @@ extension ContentCodable {
 
             // models that SHOULD NOT be published
             case .address:      throw BotError.encodeFailure
+            case .walletAddress:      throw BotError.encodeFailure
             case .unknown:      throw BotError.encodeFailure
             case .unsupported:  throw BotError.encodeFailure
         }

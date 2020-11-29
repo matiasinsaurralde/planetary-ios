@@ -18,6 +18,7 @@ target 'Planetary' do
     pod 'Bugsnag', '5.23.1'
     pod 'Down', '0.9.2'
     pod 'SkeletonView', '1.8.7'
+    pod 'EthereumKit.swift'
     
 end
 
