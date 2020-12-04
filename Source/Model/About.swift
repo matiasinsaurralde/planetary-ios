@@ -23,6 +23,7 @@ struct About: ContentCodable {
         case shortcode
         case type
         case publicWebHosting
+        case wallet
     }
 
     let about: Identity
@@ -32,7 +33,8 @@ struct About: ContentCodable {
     let shortcode: String?
     let type: ContentType
     let publicWebHosting: Bool?
-
+    let wallet: Bool?
+    
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         description = try? values.decode(String.self, forKey: .description)
@@ -42,6 +44,7 @@ struct About: ContentCodable {
         shortcode = try? values.decode(String.self, forKey: .shortcode)
         type = try values.decode(ContentType.self, forKey: .type)
         publicWebHosting = try? values.decode(Bool.self, forKey: .publicWebHosting)
+        wallet = try? values.decode(Bool.self, forKey: .wallet)
     }
 
     init() {
@@ -56,6 +59,7 @@ struct About: ContentCodable {
         self.name = nil
         self.shortcode = nil
         self.publicWebHosting = nil
+        self.wallet = nil
     }
 
     init(about: Identity, name: String) {
@@ -66,6 +70,7 @@ struct About: ContentCodable {
         self.name = name
         self.shortcode = nil
         self.publicWebHosting = nil
+        self.wallet = nil
     }
 
     init(about: Identity, descr: String) {
@@ -76,6 +81,7 @@ struct About: ContentCodable {
         self.image = nil
         self.shortcode = nil
         self.publicWebHosting = nil
+        self.wallet = nil
     }
     
     init(about: Identity, publicWebHosting: Bool) {
@@ -86,6 +92,7 @@ struct About: ContentCodable {
         self.image = nil
         self.shortcode = nil
         self.publicWebHosting = publicWebHosting
+        self.wallet = nil
     }
 
     init(about: Identity, image: BlobIdentifier) {
@@ -96,6 +103,7 @@ struct About: ContentCodable {
         self.name = nil
         self.shortcode = nil
         self.publicWebHosting = nil
+        self.wallet = nil
     }
 
     init(about: Identity, name: String?, description: String?, imageLink: BlobIdentifier?, publicWebHosting: Bool? = nil) {
@@ -106,6 +114,7 @@ struct About: ContentCodable {
         self.name = name
         self.shortcode = nil
         self.publicWebHosting = publicWebHosting
+        self.wallet = nil
     }
 
     init(identity: Identity, name: String?, description: String?, image: Image?, publicWebHosting: Bool?) {
@@ -116,6 +125,18 @@ struct About: ContentCodable {
         self.name = name
         self.shortcode = nil
         self.publicWebHosting = publicWebHosting
+        self.wallet = nil
+    }
+    
+    init(identity: Identity, name: String?, description: String?, image: Image?, publicWebHosting: Bool?, wallet: Bool?) {
+        self.type = .about
+        self.about = identity
+        self.description = description
+        self.image = image
+        self.name = name
+        self.shortcode = nil
+        self.publicWebHosting = publicWebHosting
+        self.wallet = nil
     }
 
     private static func decodeImage(from values: KeyedDecodingContainer<About.CodingKeys>) -> Image? {
@@ -130,13 +151,15 @@ struct About: ContentCodable {
                      name: String? = nil,
                      description: String? = nil,
                      image: Image? = nil,
-                     publicWebHosting: Bool? = nil) -> About
+                     publicWebHosting: Bool? = nil,
+                     wallet: Bool? = nil) -> About
     {
         return About(identity: identity ?? self.identity,
                      name: name ?? self.name,
                      description: description ?? self.description,
                      image: image ?? self.image,
-                     publicWebHosting: publicWebHosting ?? self.publicWebHosting)
+                     publicWebHosting: publicWebHosting ?? self.publicWebHosting,
+                     wallet: wallet ?? self.wallet)
     }
 }
 

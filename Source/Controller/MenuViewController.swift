@@ -103,11 +103,19 @@ class MenuViewController: UIViewController {
     
     @objc private func walletButtonTouchUpInside() {
         Analytics.shared.trackDidTapButton(buttonName: "your_wallet")
-        guard let identity = Bots.current.identity else { return }
-        AppController.shared.pushViewController(for: .about, with: identity)
+        //guard let identity = Bots.current.identity else { return }
+        
+        if Manager.shared.ethereumKit == nil {
+            UINavigationController(rootViewController: WordsController())
+            AppController.shared.wordsViewController()
+        }
+        else {
+            AppController.shared.walletViewController()
+        }
+        
         self.close()
     }
-
+ 
     @objc private func settingsButtonTouchUpInside() {
         Analytics.shared.trackDidTapButton(buttonName: "settings")
         self.close() {

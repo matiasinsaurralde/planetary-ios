@@ -80,6 +80,12 @@ extension AppController {
         self.push(controller)
     }
     
+    func wordsViewController() {
+        let controller = WordsController()
+        self.push(controller)
+    }
+    
+    
     
     func pushThreadViewController(for identifier: MessageIdentifier) {
         Bots.current.thread(rootKey: identifier) { (root, _, error) in

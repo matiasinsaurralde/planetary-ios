@@ -35,7 +35,7 @@ class WalletController: UITabBarController {
         swapNavigation.tabBarItem.title = "Swap"
         swapNavigation.tabBarItem.image = UIImage(named: "Transactions Tab Bar Icon")
 
-        viewControllers = [balanceNavigation, transactionsNavigation, sendNavigation, receiveNavigation, swapNavigation]
+        viewControllers = [balanceNavigation, transactionsNavigation, sendNavigation, receiveNavigation]//, swapNavigation]
     }
 
 }

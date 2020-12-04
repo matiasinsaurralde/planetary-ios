@@ -27,13 +27,78 @@ class SettingsViewController: DebugTableViewController {
 
     internal override func updateSettings() {
         self.settings = [self.publicWebHosting(),
+                         self.wallet(),
                          self.push(),
                          self.usage(),
                          self.managePubs(),
                          self.preview()]
         super.updateSettings()
     }
+    
+    // MARK: Crypto Wallet
 
+    private lazy var walletToggle: UISwitch = {
+        let toggle = UISwitch.default()
+        toggle.addTarget(self,
+                         action: #selector(self.walletToggleValueChanged(toggle:)),
+                         for: .valueChanged)
+        return toggle
+    }()
+    
+    private func wallet() -> DebugTableViewController.Settings {
+        let valueClosure = { (_ cell: UITableViewCell) -> Void in
+            cell.showActivityIndicator()
+            Bots.current.about { [weak self] (about, error) in
+                cell.hideActivityIndicator()
+                let isWalletEnabled = about?.wallet ?? false
+                self?.walletToggle.isOn = isWalletEnabled
+                cell.accessoryView = self?.walletToggle
+            }
+        }
+
+        var settings: [DebugTableViewCellModel] = []
+        settings += [DebugTableViewCellModel(title: Text.Wallet.enabled.text,
+                                             valueClosure: valueClosure,
+                                             actionClosure: nil)]
+
+        return (Text.Wallet.title.text, settings, Text.Wallet.footer.text)
+    }
+    
+    @objc private func walletToggleValueChanged(toggle: UISwitch) {
+        let isWalletEnabled = toggle.isOn
+        AppController.shared.showProgress()
+        Bots.current.about { [weak self] (about, error) in
+            if let error = error {
+                Log.optional(error)
+                CrashReporting.shared.reportIfNeeded(error: error)
+                AppController.shared.hideProgress()
+                toggle.isOn = !isWalletEnabled
+                self?.alert(error: error)
+            } else if let about = about {
+                let newAbout = about.mutatedCopy(wallet: isWalletEnabled)
+                Bots.current.publish(content: newAbout) { (_, error) in
+                    Log.optional(error)
+                    CrashReporting.shared.reportIfNeeded(error: error)
+
+                    AppController.shared.hideProgress()
+                    if let error = error {
+                        self?.alert(error: error)
+                        toggle.isOn = !isWalletEnabled
+                    }
+                }
+            } else {
+                let error = AppError.unexpected
+                Log.optional(error)
+                CrashReporting.shared.reportIfNeeded(error: error)
+                AppController.shared.hideProgress()
+                toggle.isOn = !isWalletEnabled
+                self?.alert(error: error)
+            }
+        }
+    }
+    
+    
+    
     // MARK: Public web hosting
 
     private lazy var publicWebHostingToggle: UISwitch = {

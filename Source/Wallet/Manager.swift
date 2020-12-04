@@ -1,6 +1,6 @@
 import RxSwift
 import EthereumKit
-    import Erc20Kit
+import Erc20Kit
 import UniswapKit
 import HdWalletKit
 

@@ -22,7 +22,7 @@ class JoinOnboardingStep: OnboardingStep {
     override func didStart() {
 
         // TODO if this fails they get stuck
-        guard let birthdate = self.data.birthdate else { return }
+            guard let birthdate = self.data.birthdate else { return }
         //guard let phone = self.data.phone else { return }
         let phone = "800-555-1212"
         guard let name = self.data.name else { return }

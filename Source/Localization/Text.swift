@@ -12,6 +12,7 @@ extension Text {
                 Text.ManagePubs.self,
                 Text.Preview.self,
                 Text.PublicWebHosting.self,
+                Text.Wallet.self,
                 Text.Push.self,
                 Text.Reporting.self,
                 Text.Debug.self,
@@ -314,6 +315,19 @@ extension Text {
         case footer = "Opt-in to indicate you want your feed to appear on public gateways. It may take a couple of hours for the changes to be visible."
     }
 }
+
+
+// MARK:- Wallet
+
+extension Text {
+
+    enum Wallet: String, Localizable, CaseIterable {
+        case enabled = "Enabled"
+        case title = "Crypto Wallet"
+        case footer = "Enable your ethereum crypto wallet in Planetary"
+    }
+}
+
 
 // MARK:- Push
 

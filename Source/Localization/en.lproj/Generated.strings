@@ -200,6 +200,10 @@
 "PublicWebHosting.title" = "Public Web Hosting";
 "PublicWebHosting.footer" = "Opt-in to indicate you want your feed to appear on public gateways. It may take a couple of hours for the changes to be visible.";
 
+"Wallet.enabled" = "Enabled";
+"Wallet.title" = "Crypto Wallet";
+"Wallet.footer" = "Enable your ethereum crypto wallet in Planetary";
+
 "Push.enabled" = "Enabled";
 "Push.title" = "Push Notifications";
 "Push.prompt" = "Push notifications for Planetary are controlled in your device's Settings app.  Would you like to open Settings now?";
