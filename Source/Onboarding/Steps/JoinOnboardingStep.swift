@@ -23,8 +23,6 @@ class JoinOnboardingStep: OnboardingStep {
 
         // TODO if this fails they get stuck
         guard let birthdate = self.data.birthdate else { return }
-        //guard let phone = self.data.phone else { return }
-        let phone = "800-555-1212"
         guard let name = self.data.name else { return }
 
         self.view.lookBusy(after: 0)
@@ -38,20 +36,38 @@ class JoinOnboardingStep: OnboardingStep {
             return
         }
 
-        Onboarding.start(birthdate: birthdate, phone: phone, name: name) { [weak self] context, error in
-            
-            Log.optional(error)
-            CrashReporting.shared.reportIfNeeded(error: error)
-            
-            self?.view.lookReady()
-            guard let context = context else {
-                self?.alert(error: error)
-                return
+        let joinOperation = JoinOperation(birthdate: birthdate, username: name)
+        
+        let bundle = Bundle(path: Bundle.main.path(forResource: "Preload", ofType: "bundle")!)!
+        let preloadOperation = LoadBundleOperation(bundle: bundle)
+        preloadOperation.addDependency(joinOperation)
+        
+        let completionOperation = BlockOperation { [weak self] in
+            switch joinOperation.result {
+            case .success(let context):
+                self?.data.context = context
+                DispatchQueue.main.async { [weak self] in
+                    self?.view.lookReady()
+                    self?.next()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.view.lookReady()
+                    self?.alert(error: error)
+                }
+            case .none:
+                DispatchQueue.main.async {
+                    self?.view.lookReady()
+                    self?.alert(error: AppError.unexpected)
+                }
             }
-            self?.data.context = context
-            
-            self?.next()
         }
+        completionOperation.addDependency(preloadOperation)
+        
+        let operations = [joinOperation, preloadOperation, completionOperation]
+        
+        AppController.shared.operationQueue.addOperations(operations,
+                                                          waitUntilFinished: false)
     }
 
     private func alert(error: Error?) {

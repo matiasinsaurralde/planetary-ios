@@ -22,8 +22,9 @@
 "Text.helpAndSupport" = "Help and Support";
 "Text.reportBug" = "Report a Bug";
 "Text.settings" = "Settings";
-"Text.userDirectory" = "User Directory";
+"Text.userDirectory" = "Directory";
 "Text.communitites" = "Communities";
+"Text.users" = "Users";
 "Text.showMeInDirectory" = "Show me in the directory";
 "Text.showMeInUserDirectory" = "Show me in the user directory";
 "Text.hideMeFromUserDirectory" = "Hide me from the user directory";
@@ -175,7 +176,7 @@
 "OnboardingStepTitle.bio" = "Why not say a little about yourself...";
 "OnboardingStepTitle.birthday" = "Before we start, when's your birthday?";
 "OnboardingStepTitle.contacts" = "You can connect your address book to see which of your friends are using Planetary";
-"OnboardingStepTitle.directory" = "People you might know";
+"OnboardingStepTitle.directory" = "Communities";
 "OnboardingStepTitle.done" = "Well done, you made it through in one piece";
 "OnboardingStepTitle.earlyAccess" = "Gentle reminder: This is early access software";
 "OnboardingStepTitle.join" = "Creating your identity on Planetary...";

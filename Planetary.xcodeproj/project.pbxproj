@@ -102,6 +102,7 @@
 		0A7C5D5524EEDD4B005E5035 /* Star.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56ABDC24E32F8000D30649 /* Star.swift */; };
 		0AAF8C4325C6444B00FD8D0F /* CommunityCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAF8C4225C6444B00FD8D0F /* CommunityCellView.swift */; };
 		0AAF8C4725C704B500FD8D0F /* UnfollowOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAF8C4625C704B500FD8D0F /* UnfollowOperation.swift */; };
+		0AAF8C4B25CC77EB00FD8D0F /* JoinOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAF8C4A25CC77EB00FD8D0F /* JoinOperation.swift */; };
 		0AB736B924577451000190F8 /* RefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB736B824577451000190F8 /* RefreshOperation.swift */; };
 		0AB736BC2457753F000190F8 /* AsynchronousOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB736BB2457753F000190F8 /* AsynchronousOperation.swift */; };
 		0AB736BE2457772B000190F8 /* SyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB736BD2457772B000190F8 /* SyncOperation.swift */; };
@@ -816,6 +817,7 @@
 		0A7C5D5124EEC21C005E5035 /* MissionControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionControlCenter.swift; sourceTree = "<group>"; };
 		0AAF8C4225C6444B00FD8D0F /* CommunityCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityCellView.swift; sourceTree = "<group>"; };
 		0AAF8C4625C704B500FD8D0F /* UnfollowOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfollowOperation.swift; sourceTree = "<group>"; };
+		0AAF8C4A25CC77EB00FD8D0F /* JoinOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinOperation.swift; sourceTree = "<group>"; };
 		0AB736B824577451000190F8 /* RefreshOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshOperation.swift; sourceTree = "<group>"; };
 		0AB736BB2457753F000190F8 /* AsynchronousOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsynchronousOperation.swift; sourceTree = "<group>"; };
 		0AB736BD2457772B000190F8 /* SyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncOperation.swift; sourceTree = "<group>"; };
@@ -1350,6 +1352,7 @@
 				0A1CA4C424E5D714006CAC43 /* FollowOperation.swift */,
 				0A1CA4C924EB2353006CAC43 /* SendMissionOperation.swift */,
 				0AAF8C4625C704B500FD8D0F /* UnfollowOperation.swift */,
+				0AAF8C4A25CC77EB00FD8D0F /* JoinOperation.swift */,
 			);
 			path = Operations;
 			sourceTree = "<group>";
@@ -3302,6 +3305,7 @@
 				5357023E2373805700140D6C /* BlockButton.swift in Sources */,
 				531587B922A0CDFB0004E2B1 /* Onboarding+Follow.swift in Sources */,
 				1B5DB7CE24AE598E008DCB81 /* AboutTableViewController.swift in Sources */,
+				0AAF8C4B25CC77EB00FD8D0F /* JoinOperation.swift in Sources */,
 				53E29CCD22D296BA008A2CB1 /* String+HashtagSubstrings.swift in Sources */,
 				23EF5AAD249D185E00469977 /* BearerBlockedAPI.swift in Sources */,
 				53AD3FD5226FBD91005228F9 /* AppDelegate+UIAppearance.swift in Sources */,

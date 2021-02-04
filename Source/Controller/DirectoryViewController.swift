@@ -170,7 +170,7 @@ extension DirectoryViewController: UITableViewDataSource {
         if section == 0 {
             return Text.communitites.text
         } else {
-            return nil
+            return Text.users.text
         }
     }
     

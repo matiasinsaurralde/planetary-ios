@@ -93,7 +93,6 @@ class GoBot: Bot {
     // MARK: Login/Logout
     
     func createSecret(completion: SecretCompletion) {
-        Thread.assertIsMainThread()
         
         guard let kp = ssbGenKey() else {
             completion(nil, GoBotError.unexpectedFault("createSecret failed"))

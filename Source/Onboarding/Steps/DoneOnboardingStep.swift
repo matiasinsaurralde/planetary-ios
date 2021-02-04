@@ -92,12 +92,8 @@ class DoneOnboardingStep: OnboardingStep {
         }
         publicWebHostingOperation.addDependency(followOperation)
         
-        let bundle = Bundle(path: Bundle.main.path(forResource: "Preload", ofType: "bundle")!)!
-        let preloadOperation = LoadBundleOperation(bundle: bundle)
-        preloadOperation.addDependency(publicWebHostingOperation)
-        
         let refreshOperation = RefreshOperation(refreshLoad: .long)
-        refreshOperation.addDependency(preloadOperation)
+        refreshOperation.addDependency(publicWebHostingOperation)
         
         let completionOperation = BlockOperation { [weak self] in
             DispatchQueue.main.async { [weak self] in
@@ -111,7 +107,6 @@ class DoneOnboardingStep: OnboardingStep {
         let operations = [startOperation,
                           followOperation,
                           publicWebHostingOperation,
-                          preloadOperation,
                           refreshOperation,
                           completionOperation]
         AppController.shared.operationQueue.addOperations(operations,
