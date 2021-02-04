@@ -22,7 +22,7 @@
 "Text.settings" = "Ustawienia";
 "Text.userDirectory" = "Katalog";
 "Text.communities" = "Społeczności";
-"Text.users" = "Użytkowników";
+"Text.users" = "Uzytkownicy";
 "Text.showMeInDirectory" = "Pokaż mnie w katalogu";
 "Text.showMeInUserDirectory" = "Pokaż mnie w katalogu użytkowników";
 "Text.hideMeFromUserDirectory" = "Nie pokazuj mnie w katalogu użytkowników";
